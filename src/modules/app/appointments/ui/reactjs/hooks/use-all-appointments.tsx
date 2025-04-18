@@ -1,0 +1,37 @@
+import { useState, useEffect } from 'react'
+
+import AppointmentFakeDao from '../../../infrastructure/daos/appointment-fake-dao'
+import DoctorFakeDao from '../../../../doctors/infrastructure/daos/doctor-fake-dao'
+import PhotoFakeDao from '../../../../doctors/infrastructure/daos/photo-fake-dao'
+import SpecialtyFakeDao from '../../../../specialties/infrastructure/daos/specialty-fake-dao'
+
+import AppointmentsAllGetter from '../../../application/services/get-all/appointments-all-getter'
+
+import AppointmentAggregate from '../../../domain/aggregates/appointment-aggregate'
+
+const appointmentFakeDao = new AppointmentFakeDao()
+const doctorFakeDao = new DoctorFakeDao()
+const photoFakeDao = new PhotoFakeDao()
+const specialtyFakeDao = new SpecialtyFakeDao()
+const appointmentsAllGetter = new AppointmentsAllGetter(
+  appointmentFakeDao,
+  doctorFakeDao,
+  photoFakeDao,
+  specialtyFakeDao,
+)
+
+export default function useAllAppointments() {
+  const [loading, setLoading] = useState(true)
+  const [appointments, setAppointments] = useState<AppointmentAggregate[]>([])
+
+  useEffect(() => {
+    appointmentsAllGetter.getAll()
+      .then(setAppointments)
+      .finally(() => setLoading(false))
+  }, [])
+
+  return {
+    loading,
+    appointments,
+  }
+}
