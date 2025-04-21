@@ -1,4 +1,4 @@
-import FakeDao from '../../../../shared/fake/infrastructure/daos/fake-dao'
+import FakeDao from '../../../../shared/dao/infrastructure/daos/fake-dao'
 
 import PhotoDao from '../../domain/daos/photo-dao'
 import Photo from '../../domain/entities/photo'

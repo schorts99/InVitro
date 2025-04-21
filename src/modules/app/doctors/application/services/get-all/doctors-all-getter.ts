@@ -4,6 +4,8 @@ import PhotoDao from '../../../domain/daos/photo-dao'
 import LocationDao from '../../../domain/daos/location-dao'
 import SpecialtyDao from '../../../../specialties/domain/daos/specialty-dao'
 import AppointmentDao from '../../../../appointments/domain/daos/appointment-dao'
+import AvailableSlotsCalculator from '../../../domain/services/calculate/available-slots-calculator'
+import AvailableSlotsGenerator from '../../../domain/services/generate/available-slots-generator'
 
 export default class DoctorsAllGetter {
   private readonly doctorDao: DoctorDao
@@ -38,14 +40,23 @@ export default class DoctorsAllGetter {
     const specialties = await this.specialtyDao.getAll()
     const appointments = await this.appointmentDao.getAll()
 
-    return doctors.map((doctor) => (
-      new DoctorAggregate(
+    return doctors.map((doctor) => {
+      const doctorAppointments = appointments.filter((appointment) => appointment.doctorId === doctor.id)
+
+      return new DoctorAggregate(
         doctor,
         photos.find((photo) => photo.doctorId === doctor.id)!,
         specialties.find((specialty) => specialty.id === doctor.specialtyId)!,
         locations.find((location) => location.doctorId === doctor.id)!,
-        appointments.filter((appointment) => appointment.doctorId === doctor.id),
+        AvailableSlotsCalculator.calculate(
+          doctor,
+          doctorAppointments,
+        ) > 0,
+        AvailableSlotsGenerator.generate(
+          doctor,
+          doctorAppointments,
+        )
       )
-    ))
+    })
   }
 }

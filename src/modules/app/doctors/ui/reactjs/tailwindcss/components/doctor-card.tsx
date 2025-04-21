@@ -1,33 +1,20 @@
 import { useState, useEffect } from 'react'
-
 import PublicImagesProvider from '../../../../../../shared/images/infrastructure/providers/public-images-provider'
-
 import DoctorAggregate from '../../../../domain/aggregates/doctor-aggregate'
-import AvailableSlotsCalculator from '../../../../domain/services/calculate/available-slots-calculator'
 
-const publicImagesProvider = new PublicImagesProvider()
+const publicImagesProvider = new PublicImagesProvider();
 
-export default function DoctorCard({ doctorAggregate }: { doctorAggregate: DoctorAggregate }) {
+export default function DoctorCard(
+  { doctorAggregate, selectDoctor }: { doctorAggregate: DoctorAggregate, selectDoctor: (doctor: DoctorAggregate) => void }
+) {
   const [photoUrl, setPhotoUrl] = useState('')
   const [loadingPhoto, setLoadingPhoto] = useState(true)
-  const [availableSlots, setAvailableSlots] = useState(
-    AvailableSlotsCalculator.calculate(doctorAggregate.doctor, doctorAggregate.appointments),
-  )
 
   useEffect(() => {
-    if (!photoUrl) {
-      publicImagesProvider.getUrl(doctorAggregate.photo.name, doctorAggregate.photo.path)
-        .then(setPhotoUrl)
-        .finally(() => setLoadingPhoto(false));
-    }
-
-    setAvailableSlots(
-      AvailableSlotsCalculator.calculate(
-        doctorAggregate.doctor,
-        doctorAggregate.appointments
-      )
-    );
-  }, [doctorAggregate]);
+    publicImagesProvider.getUrl(doctorAggregate.photo.name, doctorAggregate.photo.path)
+      .then(setPhotoUrl)
+      .finally(() => setLoadingPhoto(false))
+  }, [])
 
   return (
     <div className="border rounded-lg shadow-lg p-4 m-2 transition-transform transform hover:scale-105 bg-white">
@@ -48,18 +35,28 @@ export default function DoctorCard({ doctorAggregate }: { doctorAggregate: Docto
       <p className="text-gray-600">
         {doctorAggregate.specialty.name}
       </p>
-      <p className="text-gray-500">
-        {availableSlots > 0 ? `Available: ${availableSlots} slot${availableSlots === 1 ? '' : 's'}` : 'Not available'}
-      </p>
-      {availableSlots > 0 ? (
+      <div className="flex items-center mt-1">
+        <span className="text-yellow-500">
+          {'★'.repeat(Math.floor(doctorAggregate.doctor.rating))}
+          {'☆'.repeat(5 - Math.floor(doctorAggregate.doctor.rating))}
+        </span>
+        <span className="ml-2 text-gray-500">
+          ({doctorAggregate.doctor.rating.toFixed(1)})
+        </span>
+      </div>
+      {doctorAggregate.isAvailable ? (
         <button 
-          // onClick={() => onBook(doctorAggregate.doctor)}
+          onClick={() => selectDoctor(doctorAggregate)}
           className="cursor-pointer bg-blue-600 text-white py-2 px-4 rounded mt-4 hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           aria-label={`Book appointment with ${doctorAggregate.doctor.name}`}
         >
           Book Appointment
         </button>
-      ) : null}
+      ) : (
+        <p className="text-gray-500">
+          Not available
+        </p>
+      )}
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import FakeDao from '../../../../shared/fake/infrastructure/daos/fake-dao'
+import FakeDao from '../../../../shared/dao/infrastructure/daos/fake-dao'
 
 import AppointmentDao from '../../domain/daos/appointment-dao'
 import Appointment from '../../domain/entities/appointment'

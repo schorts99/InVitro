@@ -6,23 +6,28 @@ import PhotoDao from '../../../../doctors/domain/daos/photo-dao'
 import DoctorsByIdsCriteria from '../../../domain/criterias/doctors-by-ids-criteria'
 import PhotosByDoctorIdsCriteria from '../../../domain/criterias/photos-by-doctor-ids-criteria'
 import SpecialtiesByIdsCriteria from '../../../../specialties/domain/criterias/specialties-by-ids-criteria'
+import LocationDao from '../../../../doctors/domain/daos/location-dao'
+import LocationsByDoctorIdsCriteria from '../../../domain/criterias/locations-by-doctor-ids-criteria'
 
 export default class AppointmentsAllGetter {
   private readonly appointmentDao: AppointmentDao
   private readonly doctorDao: DoctorDao
   private readonly photoDao: PhotoDao
   private readonly specialtyDao: SpecialtyDao
+  private readonly locationDao: LocationDao
 
   constructor(
     appointmentDao: AppointmentDao,
     doctorDao: DoctorDao,
     photoDao: PhotoDao,
     specialtyDao: SpecialtyDao,
+    locationDao: LocationDao
   ) {
     this.appointmentDao = appointmentDao
     this.doctorDao = doctorDao
     this.photoDao = photoDao
     this.specialtyDao = specialtyDao
+    this.locationDao = locationDao
   }
 
   async getAll(): Promise<AppointmentAggregate[]> {
@@ -40,6 +45,8 @@ export default class AppointmentsAllGetter {
     const specialtyIds = doctors.map((doctor) => doctor.specialtyId)
     const specialtiesByIdsCriteria = new SpecialtiesByIdsCriteria(specialtyIds)
     const specialties = await this.specialtyDao.search(specialtiesByIdsCriteria)
+    const locationsByDoctorIdsCriteria = new LocationsByDoctorIdsCriteria(doctorIds)
+    const locations = await this.locationDao.search(locationsByDoctorIdsCriteria)
 
     return appointments.map((appointment) => {
       const doctor = doctors.find((doctor) => doctor.id === appointment.doctorId)!
@@ -48,7 +55,8 @@ export default class AppointmentsAllGetter {
         appointment,
         doctor,
         photos.find((photo) => photo.doctorId === doctor.id)!,
-        specialties.find((specialty) => specialty.id === doctor.specialtyId)!
+        specialties.find((specialty) => specialty.id === doctor.specialtyId)!,
+        locations.find((location) => location.doctorId === doctor.id)!
       )
     })
   }

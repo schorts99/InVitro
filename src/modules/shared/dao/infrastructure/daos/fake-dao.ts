@@ -6,7 +6,6 @@ import Order from '../../../criteria/domain/criteria/order'
 export default abstract class FakeDao<Entity extends { id: string }> {
   private entities: Array<Entity>
   
-  
   constructor(entities: Array<Entity>) {
     this.entities = entities
   }

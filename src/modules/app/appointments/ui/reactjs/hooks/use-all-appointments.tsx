@@ -4,6 +4,7 @@ import AppointmentFakeDao from '../../../infrastructure/daos/appointment-fake-da
 import DoctorFakeDao from '../../../../doctors/infrastructure/daos/doctor-fake-dao'
 import PhotoFakeDao from '../../../../doctors/infrastructure/daos/photo-fake-dao'
 import SpecialtyFakeDao from '../../../../specialties/infrastructure/daos/specialty-fake-dao'
+import LocationFakeDao from '../../../../doctors/infrastructure/daos/location-fake-dao'
 
 import AppointmentsAllGetter from '../../../application/services/get-all/appointments-all-getter'
 
@@ -13,11 +14,13 @@ const appointmentFakeDao = new AppointmentFakeDao()
 const doctorFakeDao = new DoctorFakeDao()
 const photoFakeDao = new PhotoFakeDao()
 const specialtyFakeDao = new SpecialtyFakeDao()
+const locationFakeDao = new LocationFakeDao()
 const appointmentsAllGetter = new AppointmentsAllGetter(
   appointmentFakeDao,
   doctorFakeDao,
   photoFakeDao,
   specialtyFakeDao,
+  locationFakeDao,
 )
 
 export default function useAllAppointments() {
