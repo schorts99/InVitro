@@ -1,6 +1,18 @@
 import { FormEvent, useEffect, useRef, useState } from 'react'
 
+import InMemoryEventBus from '../../../../../../shared/event-bus/infrastructure/buses/in-memory-event-bus';
+import AppointmentLocalStorageDao from '../../../../infrastructure/daos/appointment-local-storage-dao';
+import UuidGenerator from '../../../../../../shared/uuid/infrastructure/generate/uuid-generator';
+
+import AppointmentCreator from '../../../../application/services/create/appointment-creator';
+
 import DoctorAggregate from '../../../../../doctors/domain/aggregates/doctor-aggregate'
+
+const appointmentLocalStorageDao = new AppointmentLocalStorageDao()
+const appointmentCreator = new AppointmentCreator(
+  appointmentLocalStorageDao,
+  InMemoryEventBus.getInstance(),
+)
 
 export default function AppointmentBookingModal(
   {
@@ -19,7 +31,15 @@ export default function AppointmentBookingModal(
 
   const handleAppointmentCreation = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    
+    await appointmentCreator.create(
+      UuidGenerator.generate(),
+      doctorAggregate!.doctor.id,
+      parseInt(selectedTime.split(':')[0], 10),
+    )
+
     onAppointmentCreated()
+    setSelectedTime('')
   }
 
   const handleKeyDown = (event: KeyboardEvent) => {

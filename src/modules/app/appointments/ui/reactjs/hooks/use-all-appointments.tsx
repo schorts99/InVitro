@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import AppointmentFakeDao from '../../../infrastructure/daos/appointment-fake-dao'
+import AppointmentLocalStorageDao from '../../../infrastructure/daos/appointment-local-storage-dao'
 import DoctorFakeDao from '../../../../doctors/infrastructure/daos/doctor-fake-dao'
 import PhotoFakeDao from '../../../../doctors/infrastructure/daos/photo-fake-dao'
 import SpecialtyFakeDao from '../../../../specialties/infrastructure/daos/specialty-fake-dao'
@@ -10,13 +10,13 @@ import AppointmentsAllGetter from '../../../application/services/get-all/appoint
 
 import AppointmentAggregate from '../../../domain/aggregates/appointment-aggregate'
 
-const appointmentFakeDao = new AppointmentFakeDao()
+const appointmentLocalStorageDao = new AppointmentLocalStorageDao()
 const doctorFakeDao = new DoctorFakeDao()
 const photoFakeDao = new PhotoFakeDao()
 const specialtyFakeDao = new SpecialtyFakeDao()
 const locationFakeDao = new LocationFakeDao()
 const appointmentsAllGetter = new AppointmentsAllGetter(
-  appointmentFakeDao,
+  appointmentLocalStorageDao,
   doctorFakeDao,
   photoFakeDao,
   specialtyFakeDao,
