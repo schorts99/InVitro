@@ -1,54 +1,42 @@
-# React + TypeScript + Vite
+# InVitro
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Platform to book appointments with doctors
 
-Currently, two official plugins are available:
+## Acknowledgements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Screaming Architecture](https://medium.com/all-you-need-is-clean-code/screaming-architecture-a2cd25fe3eec)
+- [Vertical Slicing](https://www.plainconcepts.com/es/recursos/vertical-slice-architecture/)
+- [Domain Driven Design](https://medium.com/@jonathanloscalzo/domain-driven-design-principios-beneficios-y-elementos-primera-parte-aad90f30aa35)
+- [Ports and Adapters Architecture](https://medium.com/the-software-architecture-chronicles/ports-adapters-architecture-d19f2d476eca)
+- [DAO Pattern](https://www.oscarblancarteblog.com/2018/12/10/data-access-object-dao-pattern/)
+- [Criteria Pattern](https://medium.com/@zerodata.aolink/desafiando-la-complejidad-c%C3%B3mo-el-patr%C3%B3n-criteria-resuelve-la-explosi%C3%B3n-de-m%C3%A9todos-de-nuestro-60ece5829f89)
+- [Event Driven Architecture](https://aws.amazon.com/event-driven-architecture/)
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Install dependencies through NPM:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Run Locally
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
 ```
+npm run dev
+```
+
+## AI
+
+AI was used to generate base UI.
+
+## Limitations
+
+Testing is missing due to time limitations
+
+## Next Steps
+
+Create real DAOs for Firestore, Dynamo or any data source.
+The project architecture allow us to create a DAO and only implement it in the service without the need of modify anything else.
+
+We should implement dependency injection to reduce code and effort in the future. Now dependencies are passed via constructor.
